@@ -52,14 +52,13 @@ namespace API.Controllers
         public async Task<ActionResult<UserDto>> Login(LoginDto loginDto)
         {
             // get the user by username
-            var user = await _context.Users.SingleOrDefaultAsync(user => user.UserName == loginDto.Username);
+            var usernameLower = loginDto.Username.ToLower();
+            var user = await _context.Users.SingleOrDefaultAsync(user => user.UserName == usernameLower);
             
             if (user == null)
             {
                 return Unauthorized($"invalid {nameof(loginDto.Username)}");
             }
-            
-            
 
             // check if the password is correct
             using var hmac = new HMACSHA512(user.PasswordSalt);
